@@ -24,9 +24,10 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return TaskResource::collection(auth()->user()->tasks);
+        $tasks = $this->task_service->list(auth()->user(), $request->q ?? '');
+        return TaskResource::collection($tasks);
     }
 
     /**
@@ -43,18 +44,6 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Task $task)
-    {
-        $this->task_service->checkPermission($task, auth()->user()->id);
-        return new TaskResource($task);
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -67,6 +56,19 @@ class TaskController extends Controller
         $updated_task = $this->task_service->update($task, $input['label'], $input['is_complete'] ?? 0, auth()->user()->id);
         return new TaskResource($updated_task);
     }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Task $task)
+    {
+        $this->task_service->checkPermission($task, auth()->user()->id);
+        return new TaskResource($task);
+    }
+
 
     /**
      * Remove the specified resource from storage.

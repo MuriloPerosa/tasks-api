@@ -23,7 +23,10 @@ class CreateTableTasksMigration extends Migration
                 ->on('users')
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
-            $table->timestamps();
+
+            // $table->timestamps();
+            $table->timestamp('created_at')->useCurrent(); // utiliza o timestamp atual por default
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate(); // utiliza o timestamp atual quando atualizado
         });
     }
 

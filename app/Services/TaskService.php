@@ -4,9 +4,25 @@ namespace App\Services;
 
 use App\Exceptions\UserNotAllowedException;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskService
 {
+
+
+    public function list(User $user, string $q = '')
+    {
+        if (!empty($q))
+        {
+            $tasks = $user->tasks()->where('label', 'LIKE', "%$q%")->get();
+        }
+        else
+        {
+            $tasks = $user->tasks;
+        }
+
+        return $tasks;
+    }
 
     public function create(string $label, int $is_completed, int $user_id)
     {

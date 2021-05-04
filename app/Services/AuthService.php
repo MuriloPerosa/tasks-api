@@ -48,4 +48,13 @@ class AuthService
 
         return $user;
     }
+
+    public function refresh()
+    {
+        $token = auth()->refresh();
+        return [
+            "access_token" => $token,
+            "token_type"   => 'Bearer'
+        ];
+    }
 }
